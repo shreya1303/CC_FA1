@@ -12,13 +12,29 @@ const FileList = ({ files, fetchFiles }) => {
   };
 
   return (
-    <div>
+    <div className="space-y-4">
       {files.map((file) => (
-        <div key={file.key}>
-          <a href={file.url} target="_blank" rel="noopener noreferrer">
-            {file.key}
-          </a>
-          <button onClick={() => handleDelete(file.key)}>Delete</button>
+        <div
+          key={file.key}
+          className="p-4 bg-gray-100 rounded-lg shadow-md flex justify-between items-center"
+        >
+          <div className="flex flex-col">
+            <a
+              href={file.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              {file.key}
+            </a>
+            
+          </div>
+          <button
+            onClick={() => handleDelete(file.key)}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+          >
+            Delete
+          </button>
         </div>
       ))}
     </div>

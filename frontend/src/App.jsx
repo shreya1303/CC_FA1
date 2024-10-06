@@ -21,10 +21,15 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <h1>Notes App</h1>
-      <FileUpload fetchFiles={fetchFiles} />
-      <FileList files={files} fetchFiles={fetchFiles} />
+    <div
+      className="App min-h-screen bg-cover bg-center flex flex-col items-center justify-center"
+      style={{ backgroundImage: `url('/path-to-your-image.jpg')` }}
+    >
+      <h1 className="text-4xl text-white font-bold mb-6">Notes App</h1>
+      <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
+        <FileUpload fetchFiles={fetchFiles} />
+        <FileList files={files} fetchFiles={fetchFiles} />
+      </div>
     </div>
   );
 }

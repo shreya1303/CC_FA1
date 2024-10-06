@@ -1,0 +1,143 @@
+
+
+==== frontend\src\components\FileList.jsx ====
+
+import React from "react";
+import axios from "axios";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+
+const FileList = ({ files, fetchFiles }) => {
+  const handleDelete = async (key) => {
+    try {
+      await axios.delete(`http://13.60.18.94:5000/delete/${key}`);
+      fetchFiles();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {files.map((file) => (
+        <div
+          key={file.key}
+          className="p-4 bg-gray-100 rounded-lg shadow-md flex justify-between items-center"
+        >
+          <div className="flex flex-col">
+            <a
+              href={file.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              {file.key}
+            </a>
+            <Worker
+              workerUrl={`https://unpkg.com/pdfjs-dist@2.5.207/build/pdf.worker.min.js`}
+            >
+              <div className="w-48 h-64 mt-2">
+                <Viewer fileUrl={file.url} />
+              </div>
+            </Worker>
+            
+          </div>
+          <button
+            onClick={() => handleDelete(file.key)}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+          >
+            Delete
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default FileList;
+
+
+==== frontend\src\components\FileUpload.jsx ====
+
+import React, { useState } from "react";
+import axios from "axios";
+
+const FileUpload = ({ fetchFiles }) => {
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      await axios.post("http://13.60.18.94:5000/upload", formData);
+      fetchFiles();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <div className="mb-4">
+      <input
+        type="file"
+        accept="application/pdf"
+        onChange={handleFileChange}
+        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600"
+      />
+      <button
+        onClick={handleUpload}
+        className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600"
+      >
+        Upload
+      </button>
+    </div>
+  );
+};
+
+export default FileUpload;
+
+
+==== frontend\src\App.jsx ====
+
+import React, { useState, useEffect } from "react";
+import FileUpload from "./components/FileUpload";
+import FileList from "./components/FileList";
+import axios from "axios";
+import "./App.css";
+
+function App() {
+  const [files, setFiles] = useState([]);
+
+  const fetchFiles = async () => {
+    try {
+      const response = await axios.get("http://13.60.18.94:5000/files");
+      setFiles(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchFiles();
+  }, []);
+
+  return (
+    <div
+      className="App min-h-screen bg-cover bg-center flex flex-col items-center justify-center"
+      style={{ backgroundImage: `url('/path-to-your-image.jpg')` }}
+    >
+      <h1 className="text-4xl text-white font-bold mb-6">Notes App</h1>
+      <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
+        <FileUpload fetchFiles={fetchFiles} />
+        <FileList files={files} fetchFiles={fetchFiles} />
+      </div>
+    </div>
+  );
+}
+
+export default App;
