@@ -4,7 +4,7 @@ import axios from "axios";
 const FileList = ({ files, fetchFiles }) => {
   const handleDelete = async (key) => {
     try {
-      await axios.delete(`http://localhost:5000/delete/${key}`);
+      await axios.delete(`http://13.60.18.94:5000/delete/${key}`);
       fetchFiles();
     } catch (err) {
       console.error(err);

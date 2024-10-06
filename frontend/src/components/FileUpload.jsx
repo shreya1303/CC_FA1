@@ -13,7 +13,7 @@ const FileUpload = ({ fetchFiles }) => {
     formData.append("file", file);
 
     try {
-      await axios.post("http://localhost:5000/upload", formData);
+      await axios.post("http://13.60.18.94:5000/upload", formData);
       fetchFiles();
     } catch (err) {
       console.error(err);
