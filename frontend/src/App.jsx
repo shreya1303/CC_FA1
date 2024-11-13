@@ -9,7 +9,7 @@ function App() {
 
   const fetchFiles = async () => {
     try {
-      const response = await axios.get("http://13.60.18.94:5000/files");
+      const response = await axios.get("http://13.60.236.5:5000/files");
       setFiles(response.data);
     } catch (err) {
       console.error(err);
